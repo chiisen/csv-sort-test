@@ -1,0 +1,37 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #e6f7ff; /* 浅蓝色 */
+  text-align: left;
+  cursor: pointer; /* 显示手型光标 */
+}
+
+tbody tr {
+  background-color: #e6ffe6; /* 浅绿色 */
+  cursor: move; /* 显示拖曳手势 */
+}
+
+tbody tr:hover {
+  background-color: #ddd;
+}
+
+tbody tr:focus, tbody tr.selected {
+  background-color: #ffffcc; /* 浅黄色 */
+  outline: none; /* 移除默认的聚焦边框 */
+}
+
+tbody tr.dragging {
+  opacity: 0.5;
+}
+
+tbody tr.drag-over {
+  background-color: #ffffcc; /* 浅黄色 */
+}

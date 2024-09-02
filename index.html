@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta charset="utf-8">
+<title></title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="app">
+  <input type="file" @change="handleFileUpload" accept=".csv">
+  <div>
+    <label for="filter-input">依據第一欄過濾:</label>
+    <input id="filter-input" type="text" v-model="filterText" @input="filterRows" placeholder="输入内容过滤第一列">
+  </div>
+  <table v-if="headers.length">
+    <thead>
+      <tr>
+        <th v-for="(header, index) in headers" :key="index" @click="sortColumn(index)">{{ header }}</th>
+      </tr>
+    </thead>
+    <tbody is="transition-group">
+      <draggable v-model="filteredRows" tag="tbody" @start="onDragStart" @end="onDragEnd" @change="onDragChange">
+        <tr v-for="(row, rowIndex) in filteredRows" :key="rowIndex" :class="{ 'dragging': draggingIndex === rowIndex, 'drag-over': dragOverIndex === rowIndex, 'selected': selectedIndex === rowIndex }" tabindex="0" @focus="onRowFocus(rowIndex)" @keydown.down.prevent="onArrowDown" @keydown.up.prevent="onArrowUp">
+          <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+        </tr>
+      </draggable>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuedraggable@2.24.3/dist/vuedraggable.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
