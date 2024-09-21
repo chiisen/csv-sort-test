@@ -104,16 +104,20 @@ const app = createApp({
     },
     downloadCSV() {
       const csvContent = [
-        this.headers.join(','), // 加入表頭
-        ...this.filteredRows.map(row => Object.values(row).join(',')) // 加入資料行
-      ].join('\n');
+        '\uFEFF' + '"' + this.headers.join('","'), // 加入表頭並加上 BOM
+        ...this.filteredRows.map(row => '"' + Object.values(row).join('","')) // 加入資料行
+      ].join('"\n');
 
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csvContent + '"'], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
-      const date = new Date();
-      const dateString = date.toISOString().replace(/[:\-T]/g, '_').split('.')[0]; // 格式化日期時間
+
+      const date = new Date(); // 取得 Date 物件
+      const offset = 8 * 60 * 60 * 1000; // +8 時區的偏移量（毫秒）
+      const localDate = new Date(date.getTime() + offset); // 調整時間偏移量
+      const dateString = localDate.toISOString().replace(/[:\-T]/g, '_').split('.')[0]; // 格式化日期時間
+
       link.setAttribute('download', `output_${dateString}.csv`);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
