@@ -101,6 +101,24 @@ const app = createApp({
       // 在原始 rows 中交換行
       this.rows.splice(originalOldIndex, 1);
       this.rows.splice(originalNewIndex, 0, temp);
+    },
+    downloadCSV() {
+      const csvContent = [
+        this.headers.join(','), // 加入表頭
+        ...this.filteredRows.map(row => Object.values(row).join(',')) // 加入資料行
+      ].join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      const date = new Date();
+      const dateString = date.toISOString().replace(/[:\-T]/g, '_').split('.')[0]; // 格式化日期時間
+      link.setAttribute('download', `output_${dateString}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   }
 });

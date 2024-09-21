@@ -10,6 +10,7 @@
   <div id="app">
     <!-- 文件上傳按鈕 -->
     <input type="file" @change="handleFileUpload" accept=".csv">
+    <button @click="downloadCSV">下載修改後的 CSV</button>
     <div>
       <!-- 過濾選單 -->
       <label for="filter-select">依據第一欄過濾:</label>
