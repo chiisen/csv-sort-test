@@ -9,6 +9,7 @@ const app = createApp({
       rows: [],
       filteredRows: [],
       filterText: '',
+      uniqueFirstColumnValues: [],
       draggingIndex: null,
       dragOverIndex: null,
       selectedIndex: null,
@@ -32,9 +33,14 @@ const app = createApp({
       this.headers = data[0];
       this.rows = data.slice(1).map((row, index) => ({ id: index, ...row }));
       this.filteredRows = this.rows;
+      this.uniqueFirstColumnValues = [...new Set(this.rows.map(row => row[0]))];
     },
     filterRows() {
-      this.filteredRows = this.rows.filter(row => row[0] === this.filterText);
+      if (this.filterText === '') {
+        this.filteredRows = this.rows;
+      } else {
+        this.filteredRows = this.rows.filter(row => row[0] === this.filterText);
+      }
     },
     sortColumn(index) {
       if (this.sortColumnIndex === index) {

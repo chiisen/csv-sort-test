@@ -8,20 +8,30 @@
 </head>
 <body>
   <div id="app">
+    <!-- 文件上傳按鈕 -->
     <input type="file" @change="handleFileUpload" accept=".csv">
     <div>
-      <label for="filter-input">依據第一欄過濾:</label>
-      <input id="filter-input" type="text" v-model="filterText" @input="filterRows" placeholder="输入内容过滤第一列">
+      <!-- 過濾選單 -->
+      <label for="filter-select">依據第一欄過濾:</label>
+      <select id="filter-select" v-model="filterText" @change="filterRows">
+        <option value="">全部</option>
+        <!-- 動態生成選項 -->
+        <option v-for="option in uniqueFirstColumnValues" :key="option" :value="option">{{ option }}</option>
+      </select>
     </div>
+    <!-- 如果有標題，顯示表格 -->
     <table v-if="headers.length">
       <thead>
         <tr>
+          <!-- 動態生成表頭 -->
           <th v-for="(header, index) in headers" :key="index" @click="sortColumn(index)">{{ header }}</th>
         </tr>
       </thead>
       <tbody is="transition-group">
+        <!-- 使用 vuedraggable 進行拖動排序 -->
         <draggable v-model="filteredRows" tag="tbody" itemKey="id" @start="onDragStart" @end="onDragEnd" @change="onDragChange">
           <template #item="{ element: row, index: rowIndex }">
+            <!-- 動態生成表格行 -->
             <tr :key="row.id" :class="{ 'dragging': draggingIndex === rowIndex, 'drag-over': dragOverIndex === rowIndex, 'selected': selectedIndex === rowIndex }" tabindex="0" @focus="onRowFocus(rowIndex)" @keydown.down.prevent="onArrowDown" @keydown.up.prevent="onArrowUp">
               <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
             </tr>
@@ -31,10 +41,15 @@
     </table>
   </div>
 
+  <!-- 引入 Vue 3 -->
   <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.prod.js"></script>
+  <!-- 引入 Sortable.js -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+  <!-- 引入 vuedraggable -->
   <script src="https://cdn.jsdelivr.net/npm/vuedraggable@4.1.0/dist/vuedraggable.umd.min.js"></script>
+  <!-- 引入 PapaParse -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <!-- 引入自定義腳本 -->
   <script src="script.js"></script>
 </body>
 </html>
